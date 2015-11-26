@@ -30,12 +30,52 @@
         $('.js-pkmn-sp-defense').text(self.info.sp_def);
         $('.js-pkmn-speed').text(self.info.speed);
 
+        console.log(PokemonApp.Pokemon.getLastUriDescription(self.info.descriptions));
+
         types.forEach(function(type) {
           $('.js-pkmn-type').after('<dd class="js-pkmn-type-item">' + type.name + '</dd>');
         });
 
+    var img_id = parseInt(_this.id) + 1;
+
+    $.ajax({
+      url: '/api/sprite/' + img_id,
+      beforeSend: function() {
+        $(document).find('.js-pkmn-img').remove();
+      },
+      success: function(response) {
+        self.info = response;
+        console.log(self.info);
+        $('.modal-body').prepend(
+          '<img src="http://pokeapi.co' + self.info.image + '" alt="" class="js-pkmn-img">'
+        );
+        $('.js-pkmn-img').text(self.info.speed);
       }
     });
+
+
+      }
+    });
+  };
+
+  PokemonApp.Pokemon.getLastUriDescription = function(descriptions) {
+    var totalEvolution = 0;
+    var descriptionUriArr = [];
+
+    for (var description in descriptions){
+      var obj = descriptions[description];
+      var segmentsName = obj.name.split('_');
+      var lastElement = segmentsName.length - 1;
+      var currentEvolution = parseInt(segmentsName[lastElement]);
+        if (currentEvolution > totalEvolution) {
+          totalEvolution++;
+          descriptionUriArr = [];
+          descriptionUriArr.push(obj.resource_uri);
+        } else if (currentEvolution === totalEvolution) {
+          descriptionUriArr.push(obj.resource_uri);
+        }
+    }
+    return descriptionUriArr;
   };
 
   PokemonApp.Pokemon.idFromUri = function(pokemonUri) {
