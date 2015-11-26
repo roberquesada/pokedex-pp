@@ -1,10 +1,7 @@
-(function(){
-  "use strict";
+(function() {
+  'use strict';
 
   PokemonApp.init = function() {
-   console.log("Pokemon App online");
- };
-
-
-
+    console.log('Pokemon App online');
+  };
 })();
